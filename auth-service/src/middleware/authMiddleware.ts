@@ -10,7 +10,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_KEY as string);
-        req.user = decoded;  // Now TypeScript knows about this property
+        req.user = decoded;
         next();
     } catch (error) {
         res.status(401).json({ error: 'Invalid token' });

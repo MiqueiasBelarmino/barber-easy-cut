@@ -1,10 +1,12 @@
-import { Router } from 'express';
-import { register, login, requestPasswordReset, resetPassword } from '../controllers/authController';
+import express from 'express';
+import AuthController from '../controllers/authController';
 
-const router = Router();
+const router = express.Router();
+const authController = new AuthController();
 
-router.post('/register', register);
-router.post('/login', login);
-router.post('/forgot-password', requestPasswordReset);
-router.post('/reset-password/:token', resetPassword);
+router.post('/register', authController.register.bind(authController));
+router.post('/login', authController.login.bind(authController));
+router.post('/forgot-password', authController.requestPasswordReset.bind(authController));
+router.post('/reset-password/:token', authController.resetPassword.bind(authController));
+
 export default router;
