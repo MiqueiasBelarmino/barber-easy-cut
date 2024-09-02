@@ -2,11 +2,11 @@ import errorHandler from '../helpers/errorHandler';
 import User from '../models/user';
 import { GenericRepository } from './genericRepository';
 
-export default class AuthRepository {
+export default class UserRepository {
 
-    async create(data: Partial<User>): Promise<User> {
+    async update(id: number, data: Partial<User>): Promise<User> {
         try {
-            return await (new GenericRepository<User>('user')).create(data);
+            return await (new GenericRepository<User>('user')).update(id, data);
         } catch (error) {
             throw errorHandler(error);
         }
