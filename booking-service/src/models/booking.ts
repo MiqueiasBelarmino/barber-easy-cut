@@ -4,4 +4,5 @@ export interface Booking {
     serviceId: number;
     date: Date;
     status: string;
+    teamMemberId: number;
 }

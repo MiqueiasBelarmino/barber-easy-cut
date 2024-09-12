@@ -19,10 +19,12 @@ model User {
   email                String    @unique
   password             String
   role                 Role
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
-  passwordResetToken   String? // Nullable field for reset token
-  passwordResetExpires DateTime? // Nullable field for reset token expiry
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+  passwordResetToken   String?   @map("password_reset_token")
+  passwordResetExpires DateTime? @map("password_reset_expires")
+  customerBooking      Booking[] @relation("userCustomer")
+  teamMemberBooking    Booking[] @relation("userTeamMember")
 }
 
 model Service {
@@ -31,16 +33,19 @@ model Service {
   description String
   duration    Int
   cost        Float
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 }
 
 model Booking {
-  id         Int      @id @default(autoincrement())
-  customerId Int
-  serviceId  Int
-  date       DateTime
-  status     String
+  id           Int      @id @default(autoincrement())
+  customerId   Int      @map("customer_id")
+  serviceId    Int      @map("service_id")
+  date         DateTime
+  status       String
+  teamMemberId Int      @map("team_member_id")
+  customer     User     @relation(name: "userCustomer", fields: [customerId], references: [id])
+  teamMember   User     @relation(name: "userTeamMember", fields: [teamMemberId], references: [id])
 }
 
 enum Role {
