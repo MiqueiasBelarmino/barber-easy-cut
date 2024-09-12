@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+model User {
+  id                   Int       @id @default(autoincrement())
+  email                String    @unique
+  password             String
+  role                 Role
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+  passwordResetToken   String?   @map("password_reset_token")
+  passwordResetExpires DateTime? @map("password_reset_expires")
+  customerBooking      Booking[] @relation("userCustomer")
+  teamMemberBooking    Booking[] @relation("userTeamMember")
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  duration    Int
+  cost        Float
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+}
+
+model Booking {
+  id           Int      @id @default(autoincrement())
+  customerId   Int      @map("customer_id")
+  serviceId    Int      @map("service_id")
+  date         DateTime
+  status       String
+  teamMemberId Int      @map("team_member_id")
+  customer     User     @relation(name: "userCustomer", fields: [customerId], references: [id])
+  teamMember   User     @relation(name: "userTeamMember", fields: [teamMemberId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  BARBER
+  CUSTOMER
+}
